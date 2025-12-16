@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, computed, effect, inject, signal, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { StorageService } from '../../services/storage.service';
 import { Meal, Targets } from '../../models/meal.model';
@@ -62,6 +62,15 @@ export class HistoryComponent implements AfterViewInit, OnDestroy {
 
   constructor() {
     this.loadData();
+    
+    // Обновляем график при изменении данных
+    effect(() => {
+      this.dailyStats();
+      this.targets();
+      if (this.chart) {
+        this.updateChart();
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -106,34 +115,77 @@ export class HistoryComponent implements AfterViewInit, OnDestroy {
     const proteins = stats.map(s => s.proteins);
     const fats = stats.map(s => s.fats);
     const carbs = stats.map(s => s.carbs);
+    const targets = this.targets();
+
+    const datasets: any[] = [
+      {
+        label: 'Белки',
+        data: proteins,
+        borderColor: 'rgb(99, 102, 241)',
+        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+        tension: 0.4
+      },
+      {
+        label: 'Жиры',
+        data: fats,
+        borderColor: 'rgb(236, 72, 153)',
+        backgroundColor: 'rgba(236, 72, 153, 0.1)',
+        tension: 0.4
+      },
+      {
+        label: 'Углеводы',
+        data: carbs,
+        borderColor: 'rgb(34, 197, 94)',
+        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+        tension: 0.4
+      }
+    ];
+
+    // Добавляем прерывистые линии норм
+    if (targets) {
+      const targetProteins = new Array(dates.length).fill(targets.proteins);
+      const targetFats = new Array(dates.length).fill(targets.fats);
+      const targetCarbs = new Array(dates.length).fill(targets.carbs);
+
+      datasets.push(
+        {
+          label: 'Норма белков',
+          data: targetProteins,
+          borderColor: 'rgb(99, 102, 241)',
+          borderDash: [5, 5],
+          borderWidth: 1.5,
+          pointRadius: 0,
+          fill: false,
+          tension: 0
+        },
+        {
+          label: 'Норма жиров',
+          data: targetFats,
+          borderColor: 'rgb(236, 72, 153)',
+          borderDash: [5, 5],
+          borderWidth: 1.5,
+          pointRadius: 0,
+          fill: false,
+          tension: 0
+        },
+        {
+          label: 'Норма углеводов',
+          data: targetCarbs,
+          borderColor: 'rgb(34, 197, 94)',
+          borderDash: [5, 5],
+          borderWidth: 1.5,
+          pointRadius: 0,
+          fill: false,
+          tension: 0
+        }
+      );
+    }
 
     const config: ChartConfiguration = {
       type: 'line',
       data: {
         labels: dates,
-        datasets: [
-          {
-            label: 'Белки',
-            data: proteins,
-            borderColor: 'rgb(99, 102, 241)',
-            backgroundColor: 'rgba(99, 102, 241, 0.1)',
-            tension: 0.4
-          },
-          {
-            label: 'Жиры',
-            data: fats,
-            borderColor: 'rgb(236, 72, 153)',
-            backgroundColor: 'rgba(236, 72, 153, 0.1)',
-            tension: 0.4
-          },
-          {
-            label: 'Углеводы',
-            data: carbs,
-            borderColor: 'rgb(34, 197, 94)',
-            backgroundColor: 'rgba(34, 197, 94, 0.1)',
-            tension: 0.4
-          }
-        ]
+        datasets
       },
       options: {
         responsive: true,
@@ -141,7 +193,8 @@ export class HistoryComponent implements AfterViewInit, OnDestroy {
         plugins: {
           legend: {
             labels: {
-              color: '#e5e7eb'
+              color: '#e5e7eb',
+              filter: (item) => !item.text.includes('Норма')
             }
           }
         },
@@ -167,6 +220,84 @@ export class HistoryComponent implements AfterViewInit, OnDestroy {
     };
 
     this.chart = new Chart(this.chartCanvas.nativeElement, config);
+  }
+
+  private updateChart(): void {
+    if (!this.chart || !this.chartCanvas) return;
+
+    const stats = this.dailyStats().slice().reverse();
+    const dates = stats.map(s => this.formatDate(s.date));
+    const proteins = stats.map(s => s.proteins);
+    const fats = stats.map(s => s.fats);
+    const carbs = stats.map(s => s.carbs);
+    const targets = this.targets();
+
+    // Обновляем основные данные
+    this.chart.data.labels = dates;
+    if (this.chart.data.datasets.length > 0) {
+      this.chart.data.datasets[0].data = proteins;
+      if (this.chart.data.datasets.length > 1) {
+        this.chart.data.datasets[1].data = fats;
+        if (this.chart.data.datasets.length > 2) {
+          this.chart.data.datasets[2].data = carbs;
+        }
+      }
+    }
+
+    // Обновляем или добавляем линии норм
+    if (targets) {
+      const targetProteins = new Array(dates.length).fill(targets.proteins);
+      const targetFats = new Array(dates.length).fill(targets.fats);
+      const targetCarbs = new Array(dates.length).fill(targets.carbs);
+
+      // Если линии норм уже есть, обновляем их
+      if (this.chart.data.datasets.length > 3) {
+        this.chart.data.datasets[3].data = targetProteins;
+        this.chart.data.datasets[4].data = targetFats;
+        this.chart.data.datasets[5].data = targetCarbs;
+      } else {
+        // Добавляем линии норм
+        this.chart.data.datasets.push(
+          {
+            label: 'Норма белков',
+            data: targetProteins,
+            borderColor: 'rgb(99, 102, 241)',
+            borderDash: [5, 5],
+            borderWidth: 1.5,
+            pointRadius: 0,
+            fill: false,
+            tension: 0
+          },
+          {
+            label: 'Норма жиров',
+            data: targetFats,
+            borderColor: 'rgb(236, 72, 153)',
+            borderDash: [5, 5],
+            borderWidth: 1.5,
+            pointRadius: 0,
+            fill: false,
+            tension: 0
+          },
+          {
+            label: 'Норма углеводов',
+            data: targetCarbs,
+            borderColor: 'rgb(34, 197, 94)',
+            borderDash: [5, 5],
+            borderWidth: 1.5,
+            pointRadius: 0,
+            fill: false,
+            tension: 0
+          }
+        );
+      }
+    } else {
+      // Удаляем линии норм, если targets нет
+      if (this.chart.data.datasets.length > 3) {
+        this.chart.data.datasets = this.chart.data.datasets.slice(0, 3);
+      }
+    }
+
+    this.chart.update();
   }
 }
 

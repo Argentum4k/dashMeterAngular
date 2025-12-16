@@ -9,67 +9,33 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Белки</td>
-          <td>{{ targets()?.proteins || 0 }}</td>
-          <td>
-            {{ eatenToday().proteins }}
-            @if ((targets()?.proteins || 0) > 0) {
-              <span class="macro-percent">({{ ((eatenToday().proteins / (targets()?.proteins || 1)) * 100) | number:'1.0-0' }}%)</span>
-            }
-          </td>
-        </tr>
-        <tr>
-          <td>Жиры</td>
-          <td>{{ targets()?.fats || 0 }}</td>
-          <td>
-            {{ eatenToday().fats }}
-            @if ((targets()?.fats || 0) > 0) {
-              <span class="macro-percent">({{ ((eatenToday().fats / (targets()?.fats || 1)) * 100) | number:'1.0-0' }}%)</span>
-            }
-          </td>
-        </tr>
-        <tr>
-          <td>Углеводы</td>
-          <td>{{ targets()?.carbs || 0 }}</td>
-          <td>
-            {{ eatenToday().carbs }}
-            @if ((targets()?.carbs || 0) > 0) {
-              <span class="macro-percent">({{ ((eatenToday().carbs / (targets()?.carbs || 1)) * 100) | number:'1.0-0' }}%)</span>
-            }
-          </td>
-        </tr>
+        @for (macro of macros; track macro.key) {
+          <tr>
+            <td>{{ macro.name }}</td>
+            <td>{{ targets()?.[macro.key] || 0 }}</td>
+            <td>
+              {{ eatenToday()[macro.key] }}
+              @if ((targets()?.[macro.key] || 0) > 0) {
+                <span class="macro-percent">({{ ((eatenToday()[macro.key] / (targets()?.[macro.key] || 1)) * 100) | number:'1.0-0' }}%)</span>
+              }
+            </td>
+          </tr>
+        }
       </tbody>
     </table>
   </div>
 
   <div class="input-section">
-    <div class="macro-input-group">
-      <div class="macro-label">белки</div>
-      <div class="macro-controls">
-        <button type="button" (click)="adjustValue('proteins', -0.5)" class="btn-control">-0.5</button>
-        <span class="macro-value">{{ proteins() }}</span>
-        <button type="button" (click)="adjustValue('proteins', 0.5)" class="btn-control">+0.5</button>
+    @for (macro of macros; track macro.key) {
+      <div class="macro-input-group">
+        <div class="macro-label">{{ macro.label }}</div>
+        <div class="macro-controls">
+          <button type="button" (click)="adjustValue(macro.key, -0.5)" class="btn-control">-0.5</button>
+          <span class="macro-value">{{ getMacroValue(macro.key) }}</span>
+          <button type="button" (click)="adjustValue(macro.key, 0.5)" class="btn-control">+0.5</button>
+        </div>
       </div>
-    </div>
-
-    <div class="macro-input-group">
-      <div class="macro-label">жиры</div>
-      <div class="macro-controls">
-        <button type="button" (click)="adjustValue('fats', -0.5)" class="btn-control">-0.5</button>
-        <span class="macro-value">{{ fats() }}</span>
-        <button type="button" (click)="adjustValue('fats', 0.5)" class="btn-control">+0.5</button>
-      </div>
-    </div>
-
-    <div class="macro-input-group">
-      <div class="macro-label">углеводы</div>
-      <div class="macro-controls">
-        <button type="button" (click)="adjustValue('carbs', -0.5)" class="btn-control">-0.5</button>
-        <span class="macro-value">{{ carbs() }}</span>
-        <button type="button" (click)="adjustValue('carbs', 0.5)" class="btn-control">+0.5</button>
-      </div>
-    </div>
+    }
   </div>
 
   <button 

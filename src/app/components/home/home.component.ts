@@ -38,6 +38,16 @@ export class HomeComponent {
   isEditing = computed(() => this.editingMealId() !== null);
   buttonText = computed(() => this.isEditing() ? 'сохранить изменения' : 'добавить прием пищи');
 
+  readonly macros: Array<{ name: string; label: string; key: 'proteins' | 'fats' | 'carbs' }> = [
+    { name: 'Белки', label: 'белки', key: 'proteins' },
+    { name: 'Жиры', label: 'жиры', key: 'fats' },
+    { name: 'Углеводы', label: 'углеводы', key: 'carbs' }
+  ];
+
+  getMacroValue(key: 'proteins' | 'fats' | 'carbs'): number {
+    return this[key]();
+  }
+
   adjustValue(type: 'proteins' | 'fats' | 'carbs', delta: number): void {
     const current = this[type]();
     const newValue = Math.max(0, this.roundToHalf(current + delta));
