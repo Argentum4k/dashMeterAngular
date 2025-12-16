@@ -1,0 +1,47 @@
+<div class="history-container">
+  <h1>История</h1>
+
+  @if (dailyStats().length === 0) {
+    <p class="no-data">Нет данных для отображения</p>
+  } @else {
+    <div class="chart-container">
+      <canvas #chartCanvas></canvas>
+    </div>
+
+    <div class="days-list">
+      <h2>Дни</h2>
+      @for (stat of dailyStats(); track stat.date) {
+        <div 
+          class="day-item"
+          [class.selected]="selectedDate() === stat.date"
+          (click)="selectDate(stat.date)">
+          <div class="day-header">
+            <span class="day-date">{{ formatDate(stat.date) }}</span>
+            <span class="day-meal-count">{{ stat.mealCount }} {{ stat.mealCount === 1 ? 'прием' : stat.mealCount < 5 ? 'приема' : 'приемов' }}</span>
+          </div>
+          <div class="day-macros">
+            <span>Б:{{ stat.proteins }} Ж:{{ stat.fats }} У:{{ stat.carbs }}</span>
+          </div>
+          @if (selectedDate() === stat.date) {
+            <div class="day-details">
+              <div class="meals-list">
+                @for (meal of selectedDayMeals(); track meal.id) {
+                  <div class="meal-item">
+                    <span class="meal-time">{{ meal.time }}</span>
+                    <span class="meal-macros">Б:{{ meal.proteins }} Ж:{{ meal.fats }} У:{{ meal.carbs }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <div class="footer-links">
+    <a routerLink="/" class="link-home">Главная</a>
+    <a routerLink="/settings" class="link-settings">Настройки</a>
+  </div>
+</div>
+

@@ -1,0 +1,115 @@
+<div class="home-container">
+  <div class="summary-table">
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>норма</th>
+          <th>съедено за день</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Белки</td>
+          <td>{{ targets()?.proteins || 0 }}</td>
+          <td>
+            {{ eatenToday().proteins }}
+            @if ((targets()?.proteins || 0) > 0) {
+              <span class="macro-percent">({{ ((eatenToday().proteins / (targets()?.proteins || 1)) * 100) | number:'1.0-0' }}%)</span>
+            }
+          </td>
+        </tr>
+        <tr>
+          <td>Жиры</td>
+          <td>{{ targets()?.fats || 0 }}</td>
+          <td>
+            {{ eatenToday().fats }}
+            @if ((targets()?.fats || 0) > 0) {
+              <span class="macro-percent">({{ ((eatenToday().fats / (targets()?.fats || 1)) * 100) | number:'1.0-0' }}%)</span>
+            }
+          </td>
+        </tr>
+        <tr>
+          <td>Углеводы</td>
+          <td>{{ targets()?.carbs || 0 }}</td>
+          <td>
+            {{ eatenToday().carbs }}
+            @if ((targets()?.carbs || 0) > 0) {
+              <span class="macro-percent">({{ ((eatenToday().carbs / (targets()?.carbs || 1)) * 100) | number:'1.0-0' }}%)</span>
+            }
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="input-section">
+    <div class="macro-input-group">
+      <div class="macro-label">белки</div>
+      <div class="macro-controls">
+        <button type="button" (click)="adjustValue('proteins', -0.5)" class="btn-control">-0.5</button>
+        <span class="macro-value">{{ proteins() }}</span>
+        <button type="button" (click)="adjustValue('proteins', 0.5)" class="btn-control">+0.5</button>
+      </div>
+    </div>
+
+    <div class="macro-input-group">
+      <div class="macro-label">жиры</div>
+      <div class="macro-controls">
+        <button type="button" (click)="adjustValue('fats', -0.5)" class="btn-control">-0.5</button>
+        <span class="macro-value">{{ fats() }}</span>
+        <button type="button" (click)="adjustValue('fats', 0.5)" class="btn-control">+0.5</button>
+      </div>
+    </div>
+
+    <div class="macro-input-group">
+      <div class="macro-label">углеводы</div>
+      <div class="macro-controls">
+        <button type="button" (click)="adjustValue('carbs', -0.5)" class="btn-control">-0.5</button>
+        <span class="macro-value">{{ carbs() }}</span>
+        <button type="button" (click)="adjustValue('carbs', 0.5)" class="btn-control">+0.5</button>
+      </div>
+    </div>
+  </div>
+
+  <button 
+    type="button" 
+    (click)="addOrUpdateMeal()" 
+    class="btn-add-meal"
+    [disabled]="proteins() === 0 && fats() === 0 && carbs() === 0">
+    {{ buttonText() }}
+  </button>
+
+  @if (isEditing()) {
+    <button type="button" (click)="cancelEdit()" class="btn-cancel">Отменить</button>
+  }
+
+  <div class="previous-meals">
+    <h2>предыдущие приемы</h2>
+    @if (todayMeals().length === 0) {
+      <p class="no-meals">Нет приемов пищи за сегодня</p>
+    } @else {
+      <div class="meals-list">
+        @for (meal of todayMeals(); track meal.id) {
+          <div class="meal-item">
+            <span class="meal-time">{{ meal.time }}</span>
+            <span class="meal-macros">Б:{{ meal.proteins }} Ж:{{ meal.fats }} У:{{ meal.carbs }}</span>
+            <button 
+              type="button" 
+              (click)="editMeal(meal)" 
+              class="btn-edit"
+              [disabled]="isEditing()">
+              ✏️
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="footer-links">
+    <a routerLink="/settings" class="link-settings">Настройки</a>
+    <a routerLink="/history" class="link-history">История</a>
+  </div>
+</div>
+

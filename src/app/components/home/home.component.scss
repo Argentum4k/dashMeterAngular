@@ -1,0 +1,249 @@
+.home-container {
+  padding: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.summary-table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--bg-secondary);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+thead {
+  background: var(--bg-tertiary);
+}
+
+th,
+td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+th {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+td {
+  color: var(--text-secondary);
+}
+
+.macro-percent {
+  color: var(--text-secondary);
+  font-size: 1em;
+  margin-left: 0.25rem;
+  opacity: 0.8;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.macro-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.macro-label {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  text-transform: lowercase;
+  margin: auto;
+}
+
+.macro-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.btn-control {
+  padding: 0.75rem 1.25rem;
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 70px;
+  font-weight: 500;
+}
+
+.btn-control:hover:not(:disabled) {
+  background: var(--bg-hover);
+  border-color: var(--accent-color);
+}
+
+.btn-control:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.btn-control:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.macro-value {
+  min-width: 60px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.btn-add-meal {
+  width: 100%;
+  padding: 1rem;
+  background: var(--accent-color);
+  color: var(--text-on-accent);
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: lowercase;
+}
+
+.btn-add-meal:hover:not(:disabled) {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.btn-add-meal:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-add-meal:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-cancel {
+  width: 100%;
+  padding: 0.75rem;
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.previous-meals {
+  margin-top: 1rem;
+}
+
+.previous-meals h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  text-transform: lowercase;
+}
+
+.no-meals {
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 2rem;
+  font-style: italic;
+}
+
+.meals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.meal-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: var(--bg-secondary);
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-color);
+}
+
+.meal-time {
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 50px;
+}
+
+.meal-macros {
+  flex: 1;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.btn-edit {
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  transition: transform 0.2s;
+  opacity: 0.7;
+}
+
+.btn-edit:hover:not(:disabled) {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.btn-edit:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.link-settings,
+.link-history {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+.link-settings:hover,
+.link-history:hover {
+  color: var(--accent-color);
+}
+

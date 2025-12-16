@@ -1,0 +1,36 @@
+<div class="settings-container">
+  <h1>Настройки целевых значений</h1>
+  <p class="subtitle">Введите ваши целевые значения БЖУ в порциях (шаг 0.5)</p>
+
+  <form [formGroup]="settingsForm" (ngSubmit)="onSubmit()" class="settings-form">
+    <div class="macro-group">
+      <label>Белки</label>
+      <div class="input-controls">
+        <button type="button" (click)="adjustValue('proteins', -0.5)" class="btn-minus">-0.5</button>
+        <input type="number" formControlName="proteins" step="0.5" min="0" class="macro-input">
+        <button type="button" (click)="adjustValue('proteins', 0.5)" class="btn-plus">+0.5</button>
+      </div>
+    </div>
+
+    <div class="macro-group">
+      <label>Жиры</label>
+      <div class="input-controls">
+        <button type="button" (click)="adjustValue('fats', -0.5)" class="btn-minus">-0.5</button>
+        <input type="number" formControlName="fats" step="0.5" min="0" class="macro-input">
+        <button type="button" (click)="adjustValue('fats', 0.5)" class="btn-plus">+0.5</button>
+      </div>
+    </div>
+
+    <div class="macro-group">
+      <label>Углеводы</label>
+      <div class="input-controls">
+        <button type="button" (click)="adjustValue('carbs', -0.5)" class="btn-minus">-0.5</button>
+        <input type="number" formControlName="carbs" step="0.5" min="0" class="macro-input">
+        <button type="button" (click)="adjustValue('carbs', 0.5)" class="btn-plus">+0.5</button>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-save" [disabled]="!settingsForm.valid">Сохранить</button>
+  </form>
+</div>
+
