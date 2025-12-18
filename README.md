@@ -1,59 +1,162 @@
-# DashMeterAngular
+# DashMeter Angular
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.3.
+Веб-приложение для отслеживания макронутриентов (БЖУ - белки, жиры, углеводы). Позволяет вести дневник питания, устанавливать целевые значения и анализировать статистику потребления макронутриентов.
 
-## Development server
+## 🚀 Возможности
 
-To start a local development server, run:
+- **Добавление приемов пищи** — быстрое внесение данных о белках, жирах и углеводах с точностью до 0.5 г
+- **Установка целей** — настройка целевых значений БЖУ на день
+- **Отслеживание прогресса** — визуализация текущего потребления относительно целей
+- **История питания** — просмотр всех записей с группировкой по датам
+- **Визуализация данных** — интерактивные графики потребления макронутриентов с отображением целевых значений
+- **Редактирование записей** — возможность изменения и удаления ранее добавленных приемов пищи
+- **Локальное хранение** — все данные сохраняются в браузере (localStorage)
 
+## 🛠 Технологии
+
+- **Angular 21** — современный фреймворк с standalone компонентами
+- **TypeScript** — строгая типизация
+- **Chart.js** — библиотека для построения графиков
+- **Signals** — реактивное управление состоянием
+- **Reactive Forms** — формы с валидацией
+- **LocalStorage** — хранение данных в браузере
+
+## 📋 Требования
+
+- Node.js (рекомендуется LTS версия)
+- npm 11.6.2 или выше
+
+## 🔧 Установка
+
+1. Клонируйте репозиторий:
 ```bash
+git clone <repository-url>
+cd dashMeterAngular
+```
+
+2. Установите зависимости:
+```bash
+npm install
+```
+
+## 🏃 Запуск
+
+### Режим разработки
+
+Запустите сервер разработки:
+```bash
+npm start
+# или
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Приложение будет доступно по адресу `http://localhost:4200/`
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Сборка для production
 
 ```bash
-ng generate component component-name
+npm run build
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Собранные файлы будут находиться в директории `dist/dashMeterAngular/browser/`
+
+### Деплой на GitHub Pages
 
 ```bash
-ng generate --help
+npm run predeploy  # сборка проекта
+npm run deploy     # деплой на GitHub Pages
 ```
 
-## Building
+## 📁 Структура проекта
 
-To build the project run:
-
-```bash
-ng build
+```
+src/
+├── app/
+│   ├── components/
+│   │   ├── home/          # Главная страница - добавление приемов пищи
+│   │   ├── settings/      # Страница настроек - установка целей БЖУ
+│   │   └── history/       # Страница истории - просмотр статистики и графиков
+│   ├── guards/
+│   │   └── targets.guard.ts  # Guard для проверки наличия целевых значений
+│   ├── models/
+│   │   └── meal.model.ts     # Модели данных (Meal, Targets, DailyData)
+│   ├── services/
+│   │   └── storage.service.ts # Сервис для работы с localStorage
+│   ├── app.routes.ts      # Маршрутизация приложения
+│   └── app.ts             # Корневой компонент
+├── styles.scss            # Глобальные стили
+└── main.ts                # Точка входа приложения
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## 🎯 Использование
 
-## Running unit tests
+### Первый запуск
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+1. При первом открытии приложения необходимо установить целевые значения БЖУ в разделе "Настройки"
+2. После установки целей вы сможете добавлять приемы пищи на главной странице
 
+### Добавление приема пищи
+
+1. На главной странице используйте кнопки `+` и `-` для установки значений белков, жиров и углеводов
+2. Значения округляются до 0.5 г
+3. Нажмите "Добавить прием пищи" для сохранения
+4. Время приема пищи устанавливается автоматически
+
+### Редактирование записи
+
+1. На главной странице нажмите на запись приема пищи
+2. Внесите изменения в значения БЖУ
+3. Нажмите "Сохранить изменения" или "Отмена" для отмены
+
+### Просмотр истории
+
+1. Перейдите в раздел "История"
+2. Просмотрите список дней с общей статистикой
+3. Нажмите на день для просмотра детальной информации о приемах пищи
+4. График показывает динамику потребления БЖУ с отображением целевых значений
+
+## 🧪 Тестирование
+
+Запуск unit-тестов:
 ```bash
+npm test
+# или
 ng test
 ```
 
-## Running end-to-end tests
+Проект использует [Vitest](https://vitest.dev/) в качестве test runner.
 
-For end-to-end (e2e) testing, run:
+## 📝 Скрипты
 
-```bash
-ng e2e
-```
+- `npm start` — запуск dev-сервера
+- `npm run build` — сборка проекта
+- `npm run watch` — сборка в режиме watch
+- `npm test` — запуск тестов
+- `npm run predeploy` — подготовка к деплою (сборка для production)
+- `npm run deploy` — деплой на GitHub Pages
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## 🔒 Хранение данных
 
-## Additional Resources
+Все данные хранятся локально в браузере с использованием `localStorage`:
+- `bju_targets` — целевые значения БЖУ
+- `bju_meals` — все приемы пищи, сгруппированные по датам
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+**Важно:** При очистке данных браузера вся информация будет удалена.
+
+## 🎨 Особенности реализации
+
+- Использование **standalone компонентов** (Angular 21+)
+- **Signals** для реактивного управления состоянием
+- **Computed signals** для производных значений
+- **OnPush** стратегия обнаружения изменений для оптимизации производительности
+- **Reactive Forms** с валидацией
+- Нативная control flow (`@if`, `@for`) вместо структурных директив
+- Доступность (WCAG AA) и поддержка screen readers
+
+## 📄 Лицензия
+
+Проект является приватным.
+
+## 🤝 Вклад
+
+Проект находится в активной разработке. Предложения и замечания приветствуются!
